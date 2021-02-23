@@ -1,0 +1,19 @@
+.conditional-recipient-and {
+    display: flex;
+}
+
+.conditional-recipient-or {
+    margin: 30px 0;
+}
+
+.conditional-recipient {
+    border-bottom: solid 1px gray;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.conditional-recipient-list {
+    margin-top: 20px;
+    border-top: solid 1px gray;
+    padding-top: 10px;
+}

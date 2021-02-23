@@ -1,0 +1,43 @@
+<% recipients.forEach(function (recipient, recipient_index) { %>
+    <div class="conditional-recipient">
+        <div class="conditional-recipient-email-field">
+            <label>Email: <input type="email" name="wpcf7cr_recipiants[<%= recipient_index %>][email]"
+                                 value="<%= recipient['email'] %>"></label>
+        </div>
+        <div class="conditional-recipient-or-list">
+            <% recipient['or_structures'].forEach(function (or_structure, or_structure_index) { %>
+                <div class="conditional-recipient-or">
+                    <% if (or_structure_index > 0) { %>
+                        <p class="conditional-recipient-or-header">OR</p>
+                    <% } %>
+                    <% or_structure.forEach(function (and_structure, and_structure_index) { %>
+                        <div class="conditional-recipient-and">
+                            <div class="conditional-recipient-and-field-form">
+                                <label>Field: <input
+                                            name="wpcf7cr_recipiants[<%= recipient_index %>][or_structures][<%= or_structure_index %>][<%= and_structure_index %>][field]"
+                                            type="text"
+                                            value="<%= and_structure['field'] %>"></label>
+                            </div>
+                            <div class="conditional-recipient-and-operator-form">
+                                <!--<?php wpcf7cr_select_form('wpcf7cr_recipiants[' . $recipient_index . '][or_structures][' . $or_structure_index . '][' . $and_structure_index . '][operator]', array('equal' =>
+                                __('Equals'), 'notequal' => __('Not Equals'))); ?>-->
+                            </div>
+                            <div class="conditional-recipient-and-value-form">
+                                <label>Value: <input
+                                            name="wpcf7cr_recipiants[<%= recipient_index %>][or_structures][<%= or_structure_index %>][<%= and_structure_index %>][value]"
+                                            type="text"
+                                            value="<%= and_structure['value'] %>"></label>
+                            </div>
+                            <a class="conditional-recipient-and-add-button button">AND</a>
+                            <% if (or_structure_index > 0 || and_structure_index > 0) { %>
+                                <a class="conditional-recipient-and-del-button button">-</a>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                </div>
+            <% }); %>
+            <a class="conditional-recipient-or-add-button button">Add New Rules</a>
+        </div>
+    </div>
+<% }); %>
+<a class="conditional-recipient-add-button button">Add Recipient</a>
