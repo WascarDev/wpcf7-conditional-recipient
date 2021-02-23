@@ -19,8 +19,14 @@
                                             value="<%= and_structure['field'] %>"></label>
                             </div>
                             <div class="conditional-recipient-and-operator-form">
-                                <!--<?php wpcf7cr_select_form('wpcf7cr_recipiants[' . $recipient_index . '][or_structures][' . $or_structure_index . '][' . $and_structure_index . '][operator]', array('equal' =>
-                                __('Equals'), 'notequal' => __('Not Equals'))); ?>-->
+                                <select name="wpcf7cr_recipiants[<%= recipient_index %>][or_structures][<%= or_structure_index %>][<%= and_structure_index %>][operator]">
+                                    <option value="equals" <%= (and_structure['operator'] === 'equals' ? 'selected' : '') %>>
+                                        Equals
+                                    </option>
+                                    <option value="noequals" <%= (and_structure['operator'] === 'noequals' ? 'selected' : '') %>>
+                                        Not Equals
+                                    </option>
+                                </select>
                             </div>
                             <div class="conditional-recipient-and-value-form">
                                 <label>Value: <input
@@ -29,7 +35,7 @@
                                             value="<%= and_structure['value'] %>"></label>
                             </div>
                             <a class="conditional-recipient-and-add-button button">AND</a>
-                            <% if (or_structure_index > 0 || and_structure_index > 0) { %>
+                            <% if (or_structure_index > 0 || and_structure_index > 0 || recipient_index > 0)  { %>
                                 <a class="conditional-recipient-and-del-button button">-</a>
                             <% } %>
                         </div>

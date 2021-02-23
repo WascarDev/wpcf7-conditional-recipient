@@ -111,26 +111,37 @@ jQuery(function ($) {
                 generateForm(list, data);
             });
 
-            $('#wpcf7-admin-form-element #conditional-recipient .conditional-recipient-list').each(function () {
-                let defaultData = {
-                    "recipients": [
-                        {
-                            "email": "",
-                            "or_structures": [
-                                [
-                                    {
-                                        "field": "",
-                                        "operator": "equals",
-                                        "value": ""
-                                    }
+            $.ajax({
+                url: WPCF7CR.ajax,
+                type: "POST",
+                data: {
+                    'action': 'wpcf7cr_settings',
+                    'post_id': $("#post_ID").val()
+                }
+            }).done(function(response) {
+                $('#wpcf7-admin-form-element #conditional-recipient .conditional-recipient-list').each(function () {
+                    let defaultData = {
+                        "recipients": [
+                            {
+                                "email": "",
+                                "or_structures": [
+                                    [
+                                        {
+                                            "field": "",
+                                            "operator": "equals",
+                                            "value": ""
+                                        }
+                                    ]
                                 ]
-                            ]
-                        }
-                    ]
-                };
+                            }
+                        ]
+                    };
 
-                generateForm(this, defaultData);
+                    generateForm(this, response.data);
+                });
             });
+
+
         });
 
     });
