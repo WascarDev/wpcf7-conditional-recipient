@@ -17,13 +17,6 @@ function wpcf7cr_select_form($name, $values, $current_value = "")
     echo '</select>';
 }
 
-function wpcf7cr_before_send_mail($contact_form)
-{
-
-}
-
-add_action('wpcf7_before_send_mail', 'wpcf7cr_before_send_mail');
-
 function wpcf7cr_save_contact_form(WPCF7_ContactForm $contact_form, $args, $context)
 {
     if (isset($_POST['wpcf7cr_recipiants'])) {
@@ -80,3 +73,49 @@ function wpcf7cr_ajax_form_metadata()
 
     wp_send_json_success(array('post' => $_POST, 'recipients' => array(array('email' => '', 'or_structures' => array(array(array("field" => '', 'operator' => 'equals', 'value' => '')))))));
 }
+
+function wpcf7cr_found_recipient($meta)
+{
+    foreach ($meta as $index => $recipient_data) {
+        foreach ($recipient_data['or_structures'] as $or_structure) {
+
+            $valid = true;
+
+            foreach ($or_structure as $and_structure) {
+                if ($and_structure['operator'] === 'equals') {
+                    if (isset($_POST[$and_structure['field']]) && $_POST[$and_structure['field']] !== $and_structure['value']) {
+                        $valid = false;
+                    }
+                } else if ($and_structure['operator'] === 'noequals') {
+                    if (!isset($_POST[$and_structure['field']]) || $_POST[$and_structure['field']] === $and_structure['value']) {
+                        $valid = false;
+                    }
+                }
+            }
+
+            if ($valid)
+                return $recipient_data['email'];
+        }
+
+    }
+
+    return false;
+}
+
+function wpcf7cr_before_send_mail_function(WPCF7_ContactForm $contact_form, $abort, $submission)
+{
+    $meta = get_post_meta($contact_form->id(), 'wpcf7cr', true);
+    if ($meta) {
+        $mail = wpcf7cr_found_recipient($meta);
+        if ($mail) {
+            $properties = $contact_form->get_properties();
+            $properties['mail']['recipient'] = $mail;
+            $contact_form->set_properties($properties);
+        }
+
+    }
+
+    return $contact_form;
+}
+
+add_filter('wpcf7_before_send_mail', 'wpcf7cr_before_send_mail_function', 10, 3);
