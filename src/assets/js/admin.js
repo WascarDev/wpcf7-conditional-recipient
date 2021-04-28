@@ -12,8 +12,13 @@ jQuery(function ($) {
                 let el = $(element);
                 let newData = {"recipients": []};
                 el.find('.conditional-recipient').each(function () {
-                    let email = $(this).find('.conditional-recipient-email-field input').val();
-                    let newRecipient = {"email": email, "or_structures": []};
+                    let emails = [];
+
+                    $(this).find('.conditional-recipient-email-field input').val(function (index, value) {
+                        emails.push(value);
+                    });
+
+                    let newRecipient = {"emails": emails, "or_structures": []};
                     $(this).find('.conditional-recipient-or').each(function () {
                         let newOrStructure = [];
                         $(this).find('.conditional-recipient-and').each(function () {
@@ -29,6 +34,31 @@ jQuery(function ($) {
                 })
                 return newData;
             }
+
+            $(document).on('click', '.conditional-recipient-add-email', function () {
+                let list = $(this).parents('.conditional-recipient-list');
+                let data = dumpData(list);
+
+                let recipientIndex = $(this).parents('.conditional-recipient').index();
+
+                data['recipients'][recipientIndex]['emails'].push('');
+
+                generateForm(list, data);
+            });
+
+            $(document).on('click', '.conditional-recipient-remove-email', function () {
+                let list = $(this).parents('.conditional-recipient-list');
+                let data = dumpData(list);
+
+                let recipientIndex = $(this).parents('.conditional-recipient').index();
+                let emailIndex = $(this).parents('.conditional-recipient-email-address').index();
+
+                if(emailIndex) {
+                    data['recipients'][recipientIndex]['emails'].splice(emailIndex, 1);
+                }
+
+                generateForm(list, data);
+            });
 
             $(document).on('click', '.conditional-recipient-and-del-button', function () {
                 let list = $(this).parents('.conditional-recipient-list');
@@ -120,23 +150,6 @@ jQuery(function ($) {
                 }
             }).done(function(response) {
                 $('#wpcf7-admin-form-element #conditional-recipient .conditional-recipient-list').each(function () {
-                    let defaultData = {
-                        "recipients": [
-                            {
-                                "email": "",
-                                "or_structures": [
-                                    [
-                                        {
-                                            "field": "",
-                                            "operator": "equals",
-                                            "value": ""
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    };
-
                     generateForm(this, response.data);
                 });
             });

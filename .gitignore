@@ -1,0 +1,6 @@
+wp/
+.idea/
+*.iml
+*.ids
+*.ipr
+*.iws

@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Contact Form 7 : Conditional Recipient
  * Version: 1.0
- * Author: Adrien Jussak - Agence Magic Web
- * Author URI: https://agence.magicweb.fr/
+ * Author: WascarDev
+ * Author URI: https://www.wascardev.com/
  **/
 
 function wpcf7cr_select_form($name, $values, $current_value = "")
@@ -71,7 +71,7 @@ function wpcf7cr_ajax_form_metadata()
         }
     }
 
-    wp_send_json_success(array('post' => $_POST, 'recipients' => array(array('email' => '', 'or_structures' => array(array(array("field" => '', 'operator' => 'equals', 'value' => '')))))));
+    wp_send_json_success(array('post' => $_POST, 'recipients' => array(array('emails' => array(''), 'or_structures' => array(array(array("field" => '', 'operator' => 'equals', 'value' => '')))))));
 }
 
 function wpcf7cr_found_recipient($meta)
@@ -83,7 +83,7 @@ function wpcf7cr_found_recipient($meta)
 
             foreach ($or_structure as $and_structure) {
                 if ($and_structure['operator'] === 'equals') {
-                    if (isset($_POST[$and_structure['field']]) && $_POST[$and_structure['field']] !== $and_structure['value']) {
+                    if (!isset($_POST[$and_structure['field']]) || $_POST[$and_structure['field']] !== $and_structure['value']) {
                         $valid = false;
                     }
                 } else if ($and_structure['operator'] === 'noequals') {
@@ -94,25 +94,27 @@ function wpcf7cr_found_recipient($meta)
             }
 
             if ($valid)
-                return $recipient_data['email'];
+                return $recipient_data['emails'];
         }
 
     }
 
-    return false;
+    return array();
 }
 
 function wpcf7cr_before_send_mail_function(WPCF7_ContactForm $contact_form, $abort, $submission)
 {
     $meta = get_post_meta($contact_form->id(), 'wpcf7cr', true);
     if ($meta) {
-        $mail = wpcf7cr_found_recipient($meta);
-        if ($mail) {
+        $mails = wpcf7cr_found_recipient($meta);
+        if (!empty($mails)) {
             $properties = $contact_form->get_properties();
-            $properties['mail']['recipient'] = $mail;
+            $properties['mail']['recipient'] = array_shift($mails);
+            if (!empty($mails)) {
+                $properties['mail']['additional_headers'] .= "\nCc : " . implode(', ', $mails);
+            }
             $contact_form->set_properties($properties);
         }
-
     }
 
     return $contact_form;

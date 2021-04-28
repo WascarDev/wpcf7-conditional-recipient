@@ -1,8 +1,17 @@
 <% recipients.forEach(function (recipient, recipient_index) { %>
     <div class="conditional-recipient">
         <div class="conditional-recipient-email-field">
-            <label>Email: <input type="email" name="wpcf7cr_recipiants[<%= recipient_index %>][email]"
-                                 value="<%= recipient['email'] %>"></label>
+            <% recipient['emails'].forEach(function (email, email_index) { %>
+                <div class="conditional-recipient-email-address">
+                    <label>Destinataire <%= email_index + 1 %>: <input type="email"
+                                                                   name="wpcf7cr_recipiants[<%= recipient_index %>][emails][<% email_index %>]"
+                                                                   value="<%= email %>"></label>
+                    <a class="button conditional-recipient-add-email">+</a>
+                    <% if (email_index > 0) { %>
+                        <a class="button conditional-recipient-remove-email">-</a>
+                    <% } %>
+                </div>
+            <% }) %>
         </div>
         <div class="conditional-recipient-or-list">
             <% recipient['or_structures'].forEach(function (or_structure, or_structure_index) { %>

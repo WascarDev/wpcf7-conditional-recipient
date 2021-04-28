@@ -1,0 +1,45 @@
+{
+  "name": "wascardev/wpcf7-conditional-recipient",
+  "description": "",
+  "minimum-stability": "stable",
+  "license": "GPL-3.0-only",
+  "authors": [
+    {
+      "name": "Adrien Jussak",
+      "email": "adrien.jussak@wascardev.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  ],
+  "extra": {
+    "wordpress-install-dir": "wp",
+    "symlinks": {
+      "./": {
+        "rel": [
+          "../wp/wp-content/plugins/wpcf7-conditional-recipient"
+        ]
+      }
+    },
+    "installer-paths": {
+      "wp/wp-content/plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ]
+    }
+  },
+  "config": {
+    "vendor-dir": "src/vendor"
+  },
+  "require": {
+    "johnpbloch/wordpress": ">=5.7.0",
+    "vansari/composer-symlink": "^1.0",
+    "wpackagist-plugin/contact-form-7": "^5.4"
+  },
+  "scripts": {
+    "post-install-cmd": "tools\\Symlinker::createSymlinks",
+    "post-update-cmd": "tools\\Symlinker::updateSymlinks"
+  }
+}
