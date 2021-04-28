@@ -28,14 +28,14 @@ add_action('wpcf7_save_contact_form', 'wpcf7cr_save_contact_form', 10, 3);
 
 function wpcf7cr_display_panel(WPCF7_ContactForm $contact_form)
 {
-    echo '<h2>' . _e("Conditional Recipient") . '</h2>';
+    echo '<h2>' . _e("Destinaire Dynamique") . '</h2>';
     echo '<div class="conditional-recipient-list"></div>';
 }
 
 function wpcf7cr_panels($panels)
 {
     $panels['conditional-recipient'] = array(
-        'title' => __('Conditional Recipient'),
+        'title' => __('Destinaire Dynamique'),
         'callback' => 'wpcf7cr_display_panel');
 
     return $panels;

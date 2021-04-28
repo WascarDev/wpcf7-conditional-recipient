@@ -1,5 +1,6 @@
 .conditional-recipient-and {
     display: flex;
+    gap: 5px;
 }
 
 .conditional-recipient-or {
