@@ -125,7 +125,7 @@ jQuery(function ($) {
                 let data = dumpData(list);
 
                 let newRecipient = {
-                    "email": "",
+                    "emails": [""],
                     "or_structures": [
                         [
                             {

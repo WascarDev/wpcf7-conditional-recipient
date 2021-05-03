@@ -71,7 +71,7 @@ function wpcf7cr_ajax_form_metadata()
         }
     }
 
-    wp_send_json_success(array('post' => $_POST, 'recipients' => array(array('emails' => array(''), 'or_structures' => array(array(array("field" => '', 'operator' => 'equals', 'value' => '')))))));
+    wp_send_json_success(array('recipients' => array(array('emails' => array(''), 'or_structures' => array(array(array("field" => '', 'operator' => 'equals', 'value' => '')))))));
 }
 
 function wpcf7cr_found_recipient($meta)
